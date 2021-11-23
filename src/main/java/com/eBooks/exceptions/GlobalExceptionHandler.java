@@ -22,6 +22,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseFactory.buildResponse(HttpStatus.BAD_REQUEST, "Username already exists");
     }
 
+    @ExceptionHandler(JwtTokenMissingException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity handleMissingJwtToken() {
+        return ResponseFactory.buildResponse(HttpStatus.BAD_REQUEST, "JWT token missing");
+    }
+
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String error = "Malformed JSON request";

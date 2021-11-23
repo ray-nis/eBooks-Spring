@@ -26,8 +26,8 @@ public class JWTUtil {
     @Value("${jwt.secret.key}")
     private String secretKey;
     private Algorithm algorithm;
-    private static final int ACCESS_TOKEN_EXPIRE_TIME = 15 * 60;
-    private static final int REFRESH_TOKEN_EXPIRE_TIME = 1 * (24 * 60 * 60);
+    private static final int ACCESS_TOKEN_EXPIRE_TIME = 1 * (60 * 60);
+    private static final int REFRESH_TOKEN_EXPIRE_TIME = (31 * 24 ) * (60 * 60);
 
     public Map<String, String> createTokens(User user, HttpServletRequest request) {
         String access_token = JWT.create()
@@ -56,6 +56,6 @@ public class JWTUtil {
 
     @PostConstruct
     public void setUpAlgo() {
-        algorithm = Algorithm.HMAC256(secretKey.getBytes());
+        algorithm = Algorithm.HMAC256(secretKey);
     }
 }
