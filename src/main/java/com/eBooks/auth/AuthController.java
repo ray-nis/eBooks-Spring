@@ -1,9 +1,9 @@
 package com.eBooks.auth;
 
-import com.eBooks.shared.response.Response;
 import com.eBooks.users.UserService;
 import com.eBooks.users.dto.UserSignupDto;
 import com.eBooks.shared.response.ResponseFactory;
+import com.eBooks.util.MessageSourceUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +17,7 @@ import javax.validation.Valid;
 @RequestMapping("/api")
 public class AuthController {
     private final UserService userService;
+    private final MessageSourceUtil messageSourceUtil;
 
     @GetMapping("/home")
     public ResponseEntity home() {
@@ -32,8 +33,7 @@ public class AuthController {
             return ResponseFactory.buildResponse(HttpStatus.BAD_REQUEST, result.getGlobalError().getDefaultMessage());
         }
 
-
         userService.save(userSignupDto);
-        return ResponseFactory.buildResponse(HttpStatus.OK);
+        return ResponseFactory.buildResponse(HttpStatus.OK, messageSourceUtil.getMessage("msg.success.signup"));
     }
 }

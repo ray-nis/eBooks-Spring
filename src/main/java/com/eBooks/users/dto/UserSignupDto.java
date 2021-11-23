@@ -13,12 +13,12 @@ import javax.validation.constraints.Size;
 @Builder
 @PasswordMatches
 public class UserSignupDto {
-    @NotBlank(message = "Username is required")
-    @Size(min = 3, max = 20, message = "Usernmae is a min of 3 and max of 20 characters")
+    @NotBlank(message = "{msg.error.username.required}")
+    @Size(min = 3, max = 20, message = "{msg.error.username.limits}")
     private String username;
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 6, message = "Password needs to be at least 6 characters")
+    @NotBlank(message = "{msg.error.password.required}")
+    @Size(min = 6, message = "{msg.error.password.limits}")
     private String password;
     private String matchingPassword;
 }
