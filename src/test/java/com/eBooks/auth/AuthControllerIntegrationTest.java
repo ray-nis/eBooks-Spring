@@ -2,16 +2,20 @@ package com.eBooks.auth;
 
 import com.eBooks.users.User;
 import com.eBooks.users.UserRepository;
+import com.eBooks.users.UserService;
 import com.eBooks.users.dto.UserSignupDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -26,6 +30,8 @@ public class AuthControllerIntegrationTest {
     private ObjectMapper objectMapper;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
     @Test
     void register_malformatedJSON() throws Exception {
@@ -33,6 +39,14 @@ public class AuthControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andExpect(jsonPath("$.message", is("Malformed JSON request")));
+    }
+
+    @Test
+    void alive_fail() throws Exception {
+        mockMvc.perform(post("/api/alive")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError())
+                .andDo(print());
     }
 
     @Test

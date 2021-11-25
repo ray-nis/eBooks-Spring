@@ -19,9 +19,9 @@ public class AuthController {
     private final UserService userService;
     private final MessageSourceUtil messageSourceUtil;
 
-    @GetMapping("/home")
+    @GetMapping("/alive")
     public ResponseEntity home() {
-        return ResponseFactory.buildResponse(HttpStatus.OK, "", "Hello");
+        return ResponseFactory.buildResponse(HttpStatus.OK, "", "alive");
     }
 
     @PostMapping("/signup")
