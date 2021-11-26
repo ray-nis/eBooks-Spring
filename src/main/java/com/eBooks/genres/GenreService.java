@@ -17,7 +17,7 @@ public class GenreService {
                 Genre
                         .builder()
                         .name( name)
-                        .books(new HashSet<>())
+                        //.books(new HashSet<>())
                         .build()
         );
     }

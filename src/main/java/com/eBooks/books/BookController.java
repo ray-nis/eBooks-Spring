@@ -1,6 +1,7 @@
 package com.eBooks.books;
 
 import com.eBooks.exceptions.BookNotFoundException;
+import com.eBooks.mapstruct.mappers.MapStructMapper;
 import com.eBooks.shared.response.ResponseFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,6 @@ public class BookController {
 
     @GetMapping("/book/{id}")
     public ResponseEntity getBookById(@PathVariable("id") Long id) throws BookNotFoundException {
-        return null;
+        return ResponseFactory.buildResponse(HttpStatus.OK, "", bookService.findByIdGetDto(id));
     }
 }
