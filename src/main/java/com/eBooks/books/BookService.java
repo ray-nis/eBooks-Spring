@@ -66,4 +66,9 @@ public class BookService {
     public BookGetDto findByIdGetDto(Long id) throws BookNotFoundException {
         return mapStructMapper.bookToBookGetDto(findById(id));
     }
+
+    public void delete(Long id) throws BookNotFoundException {
+        Book book = findById(id);
+        bookRepository.delete(book);
+    }
 }
