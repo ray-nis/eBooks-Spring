@@ -27,6 +27,8 @@ public class Book extends DateAudit {
     @NotBlank(message = "Title is required.")
     private String title;
 
+    private String description;
+
     private int totalPages;
 
     @ISBN

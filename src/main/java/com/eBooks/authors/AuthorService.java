@@ -1,5 +1,6 @@
 package com.eBooks.authors;
 
+import com.eBooks.exceptions.AuthorNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,5 +18,9 @@ public class AuthorService {
                 .lastName(lastName)
                 .books(new HashSet<>())
                 .build());
+    }
+
+    public Author findById(Long authorId) throws AuthorNotFoundException {
+        return authorRepository.findById(authorId).orElseThrow(AuthorNotFoundException::new);
     }
 }

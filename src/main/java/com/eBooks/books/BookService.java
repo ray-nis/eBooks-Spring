@@ -1,24 +1,26 @@
 package com.eBooks.books;
 
+import com.eBooks.authors.Author;
+import com.eBooks.authors.AuthorService;
+import com.eBooks.exceptions.AuthorNotFoundException;
 import com.eBooks.exceptions.BookNotFoundException;
 import com.eBooks.genres.Genre;
-import com.eBooks.mapstruct.dtos.BookGetDto;
+import com.eBooks.books.dto.BookGetDto;
+import com.eBooks.books.dto.BookPostDto;
 import com.eBooks.mapstruct.mappers.MapStructMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class BookService {
     private final BookRepository bookRepository;
     private final MapStructMapper mapStructMapper;
+    private final AuthorService authorService;
 
     public Book create(String name) {
         return bookRepository.save(
@@ -30,6 +32,25 @@ public class BookService {
                         //.genres(new HashSet<>())
                         .authors(new HashSet<>())
                         .build());
+    }
+
+    public BookGetDto create(BookPostDto bookPostDto) throws AuthorNotFoundException {
+        HashSet<Author> authors = new HashSet<>();
+        for (Long authorId : bookPostDto.getAuthorsId()) {
+            authors.add(authorService.findById(authorId));
+        }
+
+        Book book = bookRepository.save(
+                Book
+                        .builder()
+                        .title(bookPostDto.getTitle())
+                        .description(bookPostDto.getDescription())
+                        .totalPages(bookPostDto.getTotalPages())
+                        .publishedDate(bookPostDto.getPublishedDate().toInstant())
+                        //.genres(new HashSet<>())
+                        .authors(authors)
+                        .build());
+        return mapStructMapper.bookToBookGetDto(book);
     }
 
     @Transactional
