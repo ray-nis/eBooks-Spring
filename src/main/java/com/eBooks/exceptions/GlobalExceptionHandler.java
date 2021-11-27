@@ -19,6 +19,18 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private final MessageSourceUtil messageSourceUtil;
 
+    @ExceptionHandler(AuthorNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity handleAuthorNotFound() {
+        return ResponseFactory.buildResponse(HttpStatus.NOT_FOUND, messageSourceUtil.getMessage("msg.error.author.notfouund"));
+    }
+
+    @ExceptionHandler(BookNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity handleBookNotFound() {
+        return ResponseFactory.buildResponse(HttpStatus.NOT_FOUND, messageSourceUtil.getMessage("msg.error.book.notfouund"));
+    }
+
     @ExceptionHandler(UserExistsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity handleUserExists() {
