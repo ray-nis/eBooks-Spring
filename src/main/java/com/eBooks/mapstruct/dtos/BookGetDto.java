@@ -1,5 +1,6 @@
 package com.eBooks.mapstruct.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,7 @@ public class BookGetDto {
     private String isbn;
 
     @JsonProperty("publishedDate")
+    @JsonFormat(pattern = "yyyy/MM/dd", timezone = "UTC")
     private Instant publishedDate;
 
     @JsonProperty("authors")
