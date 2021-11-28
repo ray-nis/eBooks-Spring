@@ -2,6 +2,7 @@ package com.eBooks.mapstruct.mappers;
 
 import com.eBooks.authors.Author;
 import com.eBooks.books.Book;
+import com.eBooks.books.dto.BookPostDto;
 import com.eBooks.mapstruct.dtos.AuthorSlimDto;
 import com.eBooks.books.dto.BookGetDto;
 import org.mapstruct.BeforeMapping;

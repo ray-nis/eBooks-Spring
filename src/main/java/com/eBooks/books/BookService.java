@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -35,10 +36,7 @@ public class BookService {
     }
 
     public BookGetDto create(BookPostDto bookPostDto) throws AuthorNotFoundException {
-        HashSet<Author> authors = new HashSet<>();
-        for (Long authorId : bookPostDto.getAuthorsId()) {
-            authors.add(authorService.findById(authorId));
-        }
+        HashSet<Author> authors = getAuthors(bookPostDto.getAuthorsId());
 
         Book book = bookRepository.save(
                 Book
@@ -70,5 +68,29 @@ public class BookService {
     public void delete(Long id) throws BookNotFoundException {
         Book book = findById(id);
         bookRepository.delete(book);
+    }
+
+    @Transactional
+    public BookGetDto update(Long id, BookPostDto bookPostDto) throws BookNotFoundException, AuthorNotFoundException {
+        Book book = findById(id);
+        book.setTitle(bookPostDto.getTitle());
+        book.setDescription(bookPostDto.getDescription());
+        book.setTotalPages(bookPostDto.getTotalPages());
+        book.setIsbn(bookPostDto.getIsbn());
+        book.setPublishedDate(bookPostDto.getPublishedDate().toInstant());
+        book.setAuthors(getAuthors(bookPostDto.getAuthorsId()));
+        book.setCreatedAt(book.getCreatedAt());
+        book.setUpdatedAt(Instant.now());
+        Book savedBook = bookRepository.save(book);
+        return mapStructMapper.bookToBookGetDto(savedBook);
+    }
+
+    private HashSet<Author> getAuthors(Set<Long> authorsId) throws AuthorNotFoundException {
+        HashSet<Author> authors = new HashSet<>();
+        for (Long authorId : authorsId) {
+            authors.add(authorService.findById(authorId));
+        }
+
+        return authors;
     }
 }

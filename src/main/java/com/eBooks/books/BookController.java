@@ -20,14 +20,14 @@ public class BookController {
     @PostMapping("/books")
     public ResponseEntity saveBook(@RequestBody BookPostDto bookPostDto) throws AuthorNotFoundException {
         return ResponseFactory.buildResponse(HttpStatus.OK,
-                messageSourceUtil.getMessage(messageSourceUtil.SUCCESS_CODE),
+                messageSourceUtil.success(),
                 bookService.create(bookPostDto));
     }
 
     @GetMapping("/books/{id}")
     public ResponseEntity getBookById(@PathVariable("id") Long id) throws BookNotFoundException {
         return ResponseFactory.buildResponse(HttpStatus.OK,
-                messageSourceUtil.getMessage(messageSourceUtil.SUCCESS_CODE),
+                messageSourceUtil.success(),
                 bookService.findByIdGetDto(id));
     }
 
@@ -35,6 +35,13 @@ public class BookController {
     public ResponseEntity deleteBook(@PathVariable("id") Long id) throws BookNotFoundException {
         bookService.delete(id);
         return ResponseFactory.buildResponse(HttpStatus.OK,
-                messageSourceUtil.getMessage(messageSourceUtil.SUCCESS_CODE));
+                messageSourceUtil.success());
+    }
+
+    @PutMapping("/books/{id}")
+    public ResponseEntity updateBook(@PathVariable("id") Long id, @RequestBody BookPostDto bookPostDto) throws BookNotFoundException, AuthorNotFoundException {
+        return ResponseFactory.buildResponse(HttpStatus.OK,
+                messageSourceUtil.success(),
+                bookService.update(id, bookPostDto));
     }
 }

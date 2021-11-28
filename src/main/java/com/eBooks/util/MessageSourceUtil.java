@@ -11,10 +11,13 @@ import java.util.Locale;
 @RequiredArgsConstructor
 public class MessageSourceUtil {
     private final MessageSource messageSource;
-    public static String SUCCESS_CODE = "msg.success";
 
     public String getMessage(String code) {
         Locale locale = LocaleContextHolder.getLocale();
         return messageSource.getMessage(code, null, locale);
+    }
+
+    public String success() {
+        return getMessage("msg.success");
     }
 }
