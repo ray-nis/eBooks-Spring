@@ -2,6 +2,7 @@ package com.eBooks.books;
 
 import com.eBooks.authors.Author;
 import com.eBooks.authors.AuthorRepository;
+import com.eBooks.authors.AuthorService;
 import com.eBooks.books.dto.BookGetDto;
 import com.eBooks.books.dto.BookPostDto;
 import com.eBooks.exceptions.AuthorNotFoundException;
@@ -42,13 +43,15 @@ class BookControllerIntegrationTest {
     MockMvc mockMvc;
 
     @Autowired
-    BookRepository bookRepository;
+    private BookRepository bookRepository;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
-    AuthorRepository authorRepository;
+    private AuthorRepository authorRepository;
     @Autowired
-    BookService bookService;
+    private BookService bookService;
+    @Autowired
+    private AuthorService authorService;
 
     BookPostDto bookPostDto;
     Author author;
@@ -147,5 +150,54 @@ class BookControllerIntegrationTest {
         int returnedBookId = JsonPath.read(result.getResponse().getContentAsString(), "$.data.id");
         Book book = bookService.findById((long) returnedBookId);
         assertEquals("Changed", book.getTitle());
+    }
+
+    @Test
+    public void getBook_bookNotFound() throws Exception {
+        MvcResult result = mockMvc.perform(get("/api/books/3000")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(bookPostDto)))
+                .andExpect(status().isNotFound())
+                .andDo(print())
+                .andReturn();
+
+        assertThrows(BookNotFoundException.class,() -> bookService.findById(3000L));
+    }
+
+    @Test
+    public void deleteBook_bookNotFound() throws Exception {
+        MvcResult result = mockMvc.perform(delete("/api/books/3000")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(bookPostDto)))
+                .andExpect(status().isNotFound())
+                .andDo(print())
+                .andReturn();
+
+        assertThrows(BookNotFoundException.class,() -> bookService.findById(3000L));
+    }
+
+    @Test
+    public void updateBook_bookNotFound() throws Exception {
+        MvcResult result = mockMvc.perform(put("/api/books/3000")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(bookPostDto)))
+                .andExpect(status().isNotFound())
+                .andDo(print())
+                .andReturn();
+
+        assertThrows(BookNotFoundException.class,() -> bookService.findById(3000L));
+    }
+
+    @Test
+    public void postBook_authorNotFound() throws Exception {
+        bookPostDto.setAuthorsId(new HashSet<>(Collections.singleton(3000L)));
+        MvcResult result = mockMvc.perform(post("/api/books")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(bookPostDto)))
+                .andExpect(status().isNotFound())
+                .andDo(print())
+                .andReturn();
+
+        assertThrows(AuthorNotFoundException.class,() -> authorService.findById(3000L));
     }
 }
