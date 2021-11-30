@@ -164,6 +164,28 @@ class BookControllerIntegrationTest {
     }
 
     @Test
+    public void getBooksByTitle_success() throws Exception {
+        bookService.create(bookPostDto);
+        MvcResult result = mockMvc.perform(get("/api/books?title=book")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.[0].title", is(bookPostDto.getTitle())))
+                .andDo(print())
+                .andReturn();
+    }
+
+    @Test
+    public void getBooksByTitle_noBooks() throws Exception {
+        bookService.create(bookPostDto);
+        MvcResult result = mockMvc.perform(get("/api/books?title=n")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.length()", is(0)))
+                .andDo(print())
+                .andReturn();
+    }
+
+    @Test
     public void getBook_bookNotFound() throws Exception {
         MvcResult result = mockMvc.perform(get("/api/books/3000")
                 .contentType(MediaType.APPLICATION_JSON)

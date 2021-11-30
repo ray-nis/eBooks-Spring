@@ -25,6 +25,13 @@ public class BookController {
                 bookService.create(bookPostDto));
     }
 
+    @RequestMapping(value = "/books", params = "title", method = RequestMethod.GET)
+    public ResponseEntity getBooksByTitle(@RequestParam("title") String title) {
+        return ResponseFactory.buildResponse(HttpStatus.OK,
+                messageSourceUtil.success(),
+                bookService.findByTitle(title));
+    }
+
     @GetMapping("/books/{id}")
     public ResponseEntity getBookById(@PathVariable("id") Long id) throws BookNotFoundException {
         return ResponseFactory.buildResponse(HttpStatus.OK,

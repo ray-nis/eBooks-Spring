@@ -15,8 +15,11 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +50,7 @@ public class BookService {
                         .builder()
                         .title(bookPostDto.getTitle())
                         .description(bookPostDto.getDescription())
+                        .isbn(bookPostDto.getIsbn())
                         .totalPages(bookPostDto.getTotalPages())
                         .publishedDate(bookPostDto.getPublishedDate().toInstant())
                         .genres(genres)
@@ -105,5 +109,12 @@ public class BookService {
         }
 
         return genres;
+    }
+
+    //TODO set max results
+    @Transactional
+    public List<BookGetDto> findByTitle(String title) {
+        List<Book> books = bookRepository.findByTitleContainingIgnoreCase(title);
+        return books.stream().map(book -> mapStructMapper.bookToBookGetDto(book)).collect(Collectors.toList());
     }
 }

@@ -31,7 +31,7 @@ public class Book extends DateAudit {
 
     private int totalPages;
 
-    @ISBN
+    //@ISBN
     private String isbn;
 
     private Instant publishedDate;
