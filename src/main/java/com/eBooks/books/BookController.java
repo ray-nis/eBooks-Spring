@@ -3,6 +3,7 @@ package com.eBooks.books;
 import com.eBooks.exceptions.AuthorNotFoundException;
 import com.eBooks.exceptions.BookNotFoundException;
 import com.eBooks.books.dto.BookPostDto;
+import com.eBooks.exceptions.GenreNotFoundException;
 import com.eBooks.shared.response.ResponseFactory;
 import com.eBooks.util.MessageSourceUtil;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class BookController {
     private final MessageSourceUtil messageSourceUtil;
 
     @PostMapping("/books")
-    public ResponseEntity saveBook(@RequestBody BookPostDto bookPostDto) throws AuthorNotFoundException {
+    public ResponseEntity saveBook(@RequestBody BookPostDto bookPostDto) throws AuthorNotFoundException, GenreNotFoundException {
         return ResponseFactory.buildResponse(HttpStatus.OK,
                 messageSourceUtil.success(),
                 bookService.create(bookPostDto));

@@ -1,5 +1,7 @@
 package com.eBooks.books.dto;
 
+import com.eBooks.genres.Genre;
+import com.eBooks.genres.dto.GenreSlimDto;
 import com.eBooks.mapstruct.dtos.AuthorSlimDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -33,4 +35,7 @@ public class BookGetDto {
 
     @JsonProperty("authors")
     private Set<AuthorSlimDto> authors;
+
+    @JsonProperty("genres")
+    private Set<GenreSlimDto> genres;
 }

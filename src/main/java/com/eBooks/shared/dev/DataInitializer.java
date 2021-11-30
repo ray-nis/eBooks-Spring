@@ -5,6 +5,8 @@ import com.eBooks.authors.AuthorService;
 import com.eBooks.books.Book;
 import com.eBooks.books.BookRepository;
 import com.eBooks.books.BookService;
+import com.eBooks.books.dto.BookGetDto;
+import com.eBooks.books.dto.BookPostDto;
 import com.eBooks.genres.Genre;
 import com.eBooks.genres.GenreRepository;
 import com.eBooks.genres.GenreService;
@@ -18,8 +20,12 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.time.Instant;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 @Profile("dev")
 @Component
@@ -47,11 +53,23 @@ public class DataInitializer implements CommandLineRunner {
                 .build());
 
         Genre genre1 = genreService.create("Genre1");
-        Book book1 = bookService.create("Book1");
+        Genre genre2 = genreService.create("Genre2");
+        Long[] genres = {genre1.getId(), genre2.getId()};
         Author author1 = authorService.create("author", "one");
+        Author author2 = authorService.create("author", "two");
+        Long[] authors = {author1.getId(), author2.getId()};
 
-        book1.getAuthors().add(author1);
-        bookService.addGenre(book1, genre1);
+        BookPostDto book1PostDto = new BookPostDto();
+        book1PostDto.setTitle("TheBook");
+        book1PostDto.setDescription("TheDesc");
+        book1PostDto.setTotalPages(100);
+        book1PostDto.setPublishedDate(Date.from(Instant.now()));
+        book1PostDto.setAuthorsId(new HashSet<Long>(Arrays.asList(authors)));
+        book1PostDto.setGenresId(new HashSet<>(Arrays.asList(genres)));
+
+        BookGetDto book1 = bookService.create(book1PostDto);
+
+
 
         //System.out.println(book1.getGenres());
         //System.out.println(bookRepository.findAllByGenresIn(new HashSet<>(Collections.singleton(genre1))));

@@ -4,9 +4,11 @@ import com.eBooks.authors.Author;
 import com.eBooks.authors.AuthorService;
 import com.eBooks.exceptions.AuthorNotFoundException;
 import com.eBooks.exceptions.BookNotFoundException;
+import com.eBooks.exceptions.GenreNotFoundException;
 import com.eBooks.genres.Genre;
 import com.eBooks.books.dto.BookGetDto;
 import com.eBooks.books.dto.BookPostDto;
+import com.eBooks.genres.GenreService;
 import com.eBooks.mapstruct.mappers.MapStructMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ public class BookService {
     private final BookRepository bookRepository;
     private final MapStructMapper mapStructMapper;
     private final AuthorService authorService;
+    private final GenreService genreService;
 
     public Book create(String name) {
         return bookRepository.save(
@@ -30,13 +33,14 @@ public class BookService {
                         .title(name)
                         .totalPages(10)
                         .publishedDate(Instant.now())
-                        //.genres(new HashSet<>())
+                        .genres(new HashSet<>())
                         .authors(new HashSet<>())
                         .build());
     }
 
-    public BookGetDto create(BookPostDto bookPostDto) throws AuthorNotFoundException {
+    public BookGetDto create(BookPostDto bookPostDto) throws AuthorNotFoundException, GenreNotFoundException {
         HashSet<Author> authors = getAuthors(bookPostDto.getAuthorsId());
+        HashSet<Genre> genres = getGenres(bookPostDto.getGenresId());
 
         Book book = bookRepository.save(
                 Book
@@ -45,7 +49,7 @@ public class BookService {
                         .description(bookPostDto.getDescription())
                         .totalPages(bookPostDto.getTotalPages())
                         .publishedDate(bookPostDto.getPublishedDate().toInstant())
-                        //.genres(new HashSet<>())
+                        .genres(genres)
                         .authors(authors)
                         .build());
         return mapStructMapper.bookToBookGetDto(book);
@@ -92,5 +96,14 @@ public class BookService {
         }
 
         return authors;
+    }
+
+    private HashSet<Genre> getGenres(Set<Long> genresId) throws GenreNotFoundException {
+        HashSet<Genre> genres = new HashSet<>();
+        for (Long genreId : genresId) {
+            genres.add(genreService.findById(genreId));
+        }
+
+        return genres;
     }
 }

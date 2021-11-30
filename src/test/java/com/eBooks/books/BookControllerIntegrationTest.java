@@ -7,12 +7,12 @@ import com.eBooks.books.dto.BookGetDto;
 import com.eBooks.books.dto.BookPostDto;
 import com.eBooks.exceptions.AuthorNotFoundException;
 import com.eBooks.exceptions.BookNotFoundException;
-import com.eBooks.users.UserRepository;
-import com.eBooks.users.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.eBooks.exceptions.GenreNotFoundException;
+import com.eBooks.genres.Genre;
+import com.eBooks.genres.GenreRepository;
+import com.eBooks.genres.GenreService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,7 @@ import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,14 +53,21 @@ class BookControllerIntegrationTest {
     private BookService bookService;
     @Autowired
     private AuthorService authorService;
+    @Autowired
+    private GenreService genreService;
+    @Autowired
+    private GenreRepository genreRepository;
 
     BookPostDto bookPostDto;
     Author author;
+    Genre genre;
 
     @BeforeEach
     void setUp() {
         bookRepository.deleteAll();
         authorRepository.deleteAll();
+        genreRepository.deleteAll();
+        genre = genreService.create("TheGenre");
         author = authorRepository.save(Author
                 .builder()
                 .name("Author")
@@ -73,6 +81,7 @@ class BookControllerIntegrationTest {
         bookPostDto.setTotalPages(100);
         bookPostDto.setPublishedDate(Date.from(Instant.now()));
         bookPostDto.setAuthorsId(new HashSet<>(Collections.singleton(author.getId())));
+        bookPostDto.setGenresId(new HashSet<>(Collections.singleton(genre.getId())));
     }
 
     @Test
@@ -95,6 +104,7 @@ class BookControllerIntegrationTest {
         assertEquals(bookPostDto.getDescription(), book.getDescription());
         assertEquals(bookPostDto.getTotalPages(), book.getTotalPages());
         assertEquals(true, book.getAuthors().contains(author));
+        assertEquals(true, book.getGenres().contains(genre));
     }
 
     @Test
@@ -118,6 +128,7 @@ class BookControllerIntegrationTest {
         assertEquals(bookPostDto.getDescription(), book.getDescription());
         assertEquals(bookPostDto.getTotalPages(), book.getTotalPages());
         assertEquals(true, book.getAuthors().contains(author));
+        assertEquals(true, book.getGenres().contains(genre));
     }
 
     @Test
@@ -199,5 +210,18 @@ class BookControllerIntegrationTest {
                 .andReturn();
 
         assertThrows(AuthorNotFoundException.class,() -> authorService.findById(3000L));
+    }
+
+    @Test
+    public void postBook_genreNotFound() throws Exception {
+        bookPostDto.setGenresId(new HashSet<>(Collections.singleton(3000L)));
+        MvcResult result = mockMvc.perform(post("/api/books")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(bookPostDto)))
+                .andExpect(status().isNotFound())
+                .andDo(print())
+                .andReturn();
+
+        assertThrows(GenreNotFoundException.class,() -> genreService.findById(3000L));
     }
 }

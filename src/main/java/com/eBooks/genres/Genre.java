@@ -23,6 +23,6 @@ public class Genre {
     @NotBlank(message = "Genre is required.")
     private String name;
 
-    /*@ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
-    private Set<Book> books;*/
+    @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
+    private Set<Book> books;
 }

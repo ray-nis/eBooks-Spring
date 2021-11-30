@@ -36,10 +36,10 @@ public class Book extends DateAudit {
 
     private Instant publishedDate;
 
-    /*@ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "book_genres",
             joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
-    private Set<Genre> genres;*/
+    private Set<Genre> genres;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "book_authors",

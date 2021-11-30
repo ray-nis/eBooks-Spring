@@ -22,13 +22,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(AuthorNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity handleAuthorNotFound() {
-        return ResponseFactory.buildResponse(HttpStatus.NOT_FOUND, messageSourceUtil.getMessage("msg.error.author.notfouund"));
+        return ResponseFactory.buildResponse(HttpStatus.NOT_FOUND, messageSourceUtil.getMessage("msg.error.author.notfound"));
     }
 
     @ExceptionHandler(BookNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity handleBookNotFound() {
-        return ResponseFactory.buildResponse(HttpStatus.NOT_FOUND, messageSourceUtil.getMessage("msg.error.book.notfouund"));
+        return ResponseFactory.buildResponse(HttpStatus.NOT_FOUND, messageSourceUtil.getMessage("msg.error.book.notfound"));
+    }
+
+    @ExceptionHandler(GenreNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity handleGenreNotFound() {
+        return ResponseFactory.buildResponse(HttpStatus.NOT_FOUND, messageSourceUtil.getMessage("msg.error.genre.notfound"));
     }
 
     @ExceptionHandler(UserExistsException.class)

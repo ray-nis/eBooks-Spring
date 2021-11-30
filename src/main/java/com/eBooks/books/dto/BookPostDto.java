@@ -29,4 +29,7 @@ public class BookPostDto {
 
     @JsonProperty("authorsId")
     private Set<Long> authorsId;
+
+    @JsonProperty("genresId")
+    private Set<Long> genresId;
 }
