@@ -19,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -86,6 +88,7 @@ class BookControllerIntegrationTest {
 
     @Test
     @Transactional
+    @WithMockUser(roles={"ADMIN"})
     public void postBook_success() throws Exception {
         MvcResult result = mockMvc.perform(post("/api/books")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -105,6 +108,18 @@ class BookControllerIntegrationTest {
         assertEquals(bookPostDto.getTotalPages(), book.getTotalPages());
         assertEquals(true, book.getAuthors().contains(author));
         assertEquals(true, book.getGenres().contains(genre));
+    }
+
+    @Test
+    @Transactional
+    @WithMockUser(roles={"USER"})
+    public void postBook_forbidden() throws Exception {
+        MvcResult result = mockMvc.perform(post("/api/books")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(bookPostDto)))
+                .andExpect(status().isForbidden())
+                .andDo(print())
+                .andReturn();
     }
 
     @Test
@@ -132,6 +147,7 @@ class BookControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(roles={"ADMIN"})
     public void deleteBook_success() throws Exception {
         BookGetDto bookGetDto = bookService.create(bookPostDto);
         MvcResult result = mockMvc.perform(delete("/api/books/" + bookGetDto.getId())
@@ -144,6 +160,7 @@ class BookControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(roles={"ADMIN"})
     public void updateBook_success() throws Exception {
         BookGetDto bookGetDto = bookService.create(bookPostDto);
         bookPostDto.setTitle("Changed");
@@ -198,6 +215,7 @@ class BookControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(roles={"ADMIN"})
     public void deleteBook_bookNotFound() throws Exception {
         MvcResult result = mockMvc.perform(delete("/api/books/3000")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -210,6 +228,7 @@ class BookControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(roles={"ADMIN"})
     public void updateBook_bookNotFound() throws Exception {
         MvcResult result = mockMvc.perform(put("/api/books/3000")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -222,6 +241,7 @@ class BookControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(roles={"ADMIN"})
     public void postBook_authorNotFound() throws Exception {
         bookPostDto.setAuthorsId(new HashSet<>(Collections.singleton(3000L)));
         MvcResult result = mockMvc.perform(post("/api/books")
@@ -235,6 +255,7 @@ class BookControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(roles={"ADMIN"})
     public void postBook_genreNotFound() throws Exception {
         bookPostDto.setGenresId(new HashSet<>(Collections.singleton(3000L)));
         MvcResult result = mockMvc.perform(post("/api/books")
