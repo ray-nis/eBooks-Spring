@@ -11,6 +11,7 @@ import com.eBooks.genres.Genre;
 import com.eBooks.genres.GenreRepository;
 import com.eBooks.genres.GenreService;
 import com.eBooks.users.RoleService;
+import com.eBooks.users.User;
 import com.eBooks.users.UserService;
 import com.eBooks.users.dto.UserSignupDto;
 import lombok.RequiredArgsConstructor;
@@ -45,12 +46,19 @@ public class DataInitializer implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws Exception {
         roleService.create("ROLE_USER");
+        roleService.create("ROLE_ADMIN");
 
         userService.save(UserSignupDto.builder()
                 .username("FirstUser")
                 .password("password")
                 .matchingPassword("password")
                 .build());
+
+        roleService.makeAdmin(userService.save(UserSignupDto.builder()
+                .username("AdminUser")
+                .password("password")
+                .matchingPassword("password")
+                .build()));
 
         Genre genre1 = genreService.create("Genre1");
         Genre genre2 = genreService.create("Genre2");

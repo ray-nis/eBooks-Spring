@@ -7,6 +7,7 @@ import com.eBooks.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -48,7 +49,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests().antMatchers("/api/signup/**", "/api/login/**", "/api/token/refresh").permitAll();
-        http.authorizeRequests().antMatchers("/api/books/**").permitAll();
+
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/books/**").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/books/**").hasRole("ADMIN");
+        http.authorizeRequests().antMatchers(HttpMethod.PUT, "/api/books/**").hasRole("ADMIN");
+        http.authorizeRequests().antMatchers(HttpMethod.DELETE, "/api/books/**").hasRole("ADMIN");
+
         http.authorizeRequests().antMatchers("/api/authors/**").permitAll();
 
         http.authorizeRequests().anyRequest().authenticated();

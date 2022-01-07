@@ -23,7 +23,7 @@ public class UserService {
     }
 
     @Transactional
-    public void save(UserSignupDto userSignupDto) throws Exception {
+    public User save(UserSignupDto userSignupDto) throws Exception {
         if (usernameExists(userSignupDto.getUsername())) {
             throw new UserExistsException();
         }
@@ -38,7 +38,7 @@ public class UserService {
                 .nonLocked(true)
                 .build();
 
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     public boolean usernameExists(String userName) {
