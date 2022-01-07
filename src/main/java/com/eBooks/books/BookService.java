@@ -11,6 +11,7 @@ import com.eBooks.books.dto.BookPostDto;
 import com.eBooks.genres.GenreService;
 import com.eBooks.mapstruct.mappers.MapStructMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

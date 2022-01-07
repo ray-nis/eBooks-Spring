@@ -30,4 +30,14 @@ public class ResponseFactory {
     public static Response buildFailAuthorizationResponse(String message) {
         return new Response(HttpStatus.FORBIDDEN, message);
     }
+
+    public static ResponseEntity ok(String message, Object data) {
+        Response response = new Response(HttpStatus.OK, message, data);
+        return buildResponse(response);
+    }
+
+    public static ResponseEntity ok(String message) {
+        Response response = new Response(HttpStatus.OK, message);
+        return buildResponse(response);
+    }
 }

@@ -20,21 +20,21 @@ public class BookController {
 
     @PostMapping("/books")
     public ResponseEntity saveBook(@RequestBody BookPostDto bookPostDto) throws AuthorNotFoundException, GenreNotFoundException {
-        return ResponseFactory.buildResponse(HttpStatus.OK,
+        return ResponseFactory.ok(
                 messageSourceUtil.success(),
                 bookService.create(bookPostDto));
     }
 
     @RequestMapping(value = "/books", params = "title", method = RequestMethod.GET)
     public ResponseEntity getBooksByTitle(@RequestParam("title") String title) {
-        return ResponseFactory.buildResponse(HttpStatus.OK,
+        return ResponseFactory.ok(
                 messageSourceUtil.success(),
                 bookService.findByTitle(title));
     }
 
     @GetMapping("/books/{id}")
     public ResponseEntity getBookById(@PathVariable("id") Long id) throws BookNotFoundException {
-        return ResponseFactory.buildResponse(HttpStatus.OK,
+        return ResponseFactory.ok(
                 messageSourceUtil.success(),
                 bookService.findByIdGetDto(id));
     }
@@ -42,13 +42,13 @@ public class BookController {
     @DeleteMapping("/books/{id}")
     public ResponseEntity deleteBook(@PathVariable("id") Long id) throws BookNotFoundException {
         bookService.delete(id);
-        return ResponseFactory.buildResponse(HttpStatus.OK,
+        return ResponseFactory.ok(
                 messageSourceUtil.success());
     }
 
     @PutMapping("/books/{id}")
     public ResponseEntity updateBook(@PathVariable("id") Long id, @RequestBody BookPostDto bookPostDto) throws BookNotFoundException, AuthorNotFoundException {
-        return ResponseFactory.buildResponse(HttpStatus.OK,
+        return ResponseFactory.ok(
                 messageSourceUtil.success(),
                 bookService.update(id, bookPostDto));
     }
