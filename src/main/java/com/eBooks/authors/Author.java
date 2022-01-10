@@ -28,6 +28,8 @@ public class Author extends DateAudit {
     @NotBlank(message = "Last name is required.")
     private String lastName;
 
+    private String fullName;
+
     @ManyToMany(mappedBy = "authors",fetch = FetchType.LAZY)
     private Set<Book> books;
 }
