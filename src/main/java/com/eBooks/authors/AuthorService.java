@@ -63,6 +63,7 @@ public class AuthorService {
 
         author.setName(authorPostDto.getName());
         author.setLastName(authorPostDto.getLastName());
+        author.setFullName(authorPostDto.getName() + " " + authorPostDto.getLastName());
         return mapStructMapper.authorToAuthorGetDto(authorRepository.save(author));
     }
 }
