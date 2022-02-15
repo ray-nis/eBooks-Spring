@@ -31,4 +31,15 @@ public class PaginationUtil {
             return PageRequest.of(currentPage, 10, Sort.by("title").ascending());
         }
     }
+
+    public static Pageable getAllAuthorsPageable(Optional<Integer> page, Optional<String> sort) {
+        int currentPage = getPage(page);
+        String sortDir = getSort(sort);
+        if (sortDir.equals("DSC")) {
+            return PageRequest.of(currentPage, 10, Sort.by("name").descending());
+        }
+        else {
+            return PageRequest.of(currentPage, 10, Sort.by("name").ascending());
+        }
+    }
 }

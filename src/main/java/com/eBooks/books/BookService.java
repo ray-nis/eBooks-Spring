@@ -121,7 +121,7 @@ public class BookService {
     }
 
     public List<BookSlimDto> findBooks(Optional<Integer> page, Optional<String> sort) {
-        Pageable pageable = PaginationUtil.getAllBooksPageable(page, sort);
+        Pageable pageable = PaginationUtil.getAllAuthorsPageable(page, sort);
         Page<Book> books = bookRepository.findAll(pageable);
         return books.stream().map(book -> mapStructMapper.bookToBookSlimDto(book)).collect(Collectors.toList());
     }

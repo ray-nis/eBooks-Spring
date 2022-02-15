@@ -7,12 +7,16 @@ import com.eBooks.books.Book;
 import com.eBooks.books.dto.BookGetDto;
 import com.eBooks.exceptions.AuthorNotFoundException;
 import com.eBooks.mapstruct.mappers.MapStructMapper;
+import com.eBooks.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -68,8 +72,9 @@ public class AuthorService {
         return mapStructMapper.authorToAuthorGetDto(authorRepository.save(author));
     }
 
-    public List<AuthorSlimDto> findAuthors() {
-        List<Author> authors = authorRepository.findAll();
+    public List<AuthorSlimDto> findAuthors(Optional<Integer> page, Optional<String> sort) {
+        Pageable pageable = PaginationUtil.getAllBooksPageable(page, sort);
+        Page<Author> authors = authorRepository.findAll(pageable);
         return authors.stream().map(author -> mapStructMapper.authorToAuthorSlimDto(author)).collect(Collectors.toList());
     }
 }

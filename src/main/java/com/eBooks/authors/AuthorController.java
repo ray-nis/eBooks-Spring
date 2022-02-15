@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -27,10 +29,10 @@ public class AuthorController {
     }
 
     @GetMapping("/authors")
-    public ResponseEntity findAuthors() throws AuthorNotFoundException {
+    public ResponseEntity findAuthors(@RequestParam("page") Optional<Integer> page, @RequestParam("sort") Optional<String> sort) throws AuthorNotFoundException {
         return ResponseFactory.ok(
                 messageSourceUtil.success(),
-                authorService.findAuthors()
+                authorService.findAuthors(page, sort)
         );
     }
 
