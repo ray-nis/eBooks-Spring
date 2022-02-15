@@ -77,6 +77,18 @@ public class DataInitializer implements CommandLineRunner {
 
         BookGetDto book1 = bookService.create(book1PostDto);
 
+        for (int i = 0; i < 50; i++) {
+            BookPostDto bookPostDto = new BookPostDto();
+            bookPostDto.setTitle("TheBook " + i);
+            bookPostDto.setDescription("TheDesc " + i);
+            bookPostDto.setTotalPages(100);
+            bookPostDto.setPublishedDate(Date.from(Instant.now()));
+            bookPostDto.setAuthorsId(new HashSet<Long>(Arrays.asList(authors)));
+            bookPostDto.setGenresId(new HashSet<>(Arrays.asList(genres)));
+
+            bookService.create(bookPostDto);
+        }
+
 
 
         //System.out.println(book1.getGenres());

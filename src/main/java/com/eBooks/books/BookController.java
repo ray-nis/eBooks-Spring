@@ -11,12 +11,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController()
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class BookController {
     private final BookService bookService;
     private final MessageSourceUtil messageSourceUtil;
+
+    @GetMapping("/books")
+    public ResponseEntity getBooks(@RequestParam("page") Optional<Integer> page, @RequestParam("sort") Optional<String> sort) throws BookNotFoundException {
+        return ResponseFactory.ok(
+                messageSourceUtil.success(),
+                bookService.findBooks(page, sort));
+    }
 
     @PostMapping("/books")
     public ResponseEntity saveBook(@RequestBody BookPostDto bookPostDto) throws AuthorNotFoundException, GenreNotFoundException {

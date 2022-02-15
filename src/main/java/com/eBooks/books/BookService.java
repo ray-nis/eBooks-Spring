@@ -2,6 +2,7 @@ package com.eBooks.books;
 
 import com.eBooks.authors.Author;
 import com.eBooks.authors.AuthorService;
+import com.eBooks.books.dto.BookSlimDto;
 import com.eBooks.exceptions.AuthorNotFoundException;
 import com.eBooks.exceptions.BookNotFoundException;
 import com.eBooks.exceptions.GenreNotFoundException;
@@ -10,16 +11,17 @@ import com.eBooks.books.dto.BookGetDto;
 import com.eBooks.books.dto.BookPostDto;
 import com.eBooks.genres.GenreService;
 import com.eBooks.mapstruct.mappers.MapStructMapper;
+import com.eBooks.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -112,10 +114,15 @@ public class BookService {
         return genres;
     }
 
-    //TODO set max results
     @Transactional
     public List<BookGetDto> findByTitle(String title) {
         List<Book> books = bookRepository.findByTitleContainingIgnoreCase(title);
         return books.stream().map(book -> mapStructMapper.bookToBookGetDto(book)).collect(Collectors.toList());
+    }
+
+    public List<BookSlimDto> findBooks(Optional<Integer> page, Optional<String> sort) {
+        Pageable pageable = PaginationUtil.getAllBooksPageable(page, sort);
+        Page<Book> books = bookRepository.findAll(pageable);
+        return books.stream().map(book -> mapStructMapper.bookToBookSlimDto(book)).collect(Collectors.toList());
     }
 }

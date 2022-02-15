@@ -26,6 +26,14 @@ public class AuthorController {
         );
     }
 
+    @GetMapping("/authors")
+    public ResponseEntity findAuthors() throws AuthorNotFoundException {
+        return ResponseFactory.ok(
+                messageSourceUtil.success(),
+                authorService.findAuthors()
+        );
+    }
+
     @RequestMapping(value = "/authors", params = "name", method = RequestMethod.GET)
     public ResponseEntity getAuthorsByName(@RequestParam("name") String name) {
         return ResponseFactory.ok(

@@ -2,6 +2,7 @@ package com.eBooks.authors;
 
 import com.eBooks.authors.dto.AuthorGetDto;
 import com.eBooks.authors.dto.AuthorPostDto;
+import com.eBooks.authors.dto.AuthorSlimDto;
 import com.eBooks.books.Book;
 import com.eBooks.books.dto.BookGetDto;
 import com.eBooks.exceptions.AuthorNotFoundException;
@@ -65,5 +66,10 @@ public class AuthorService {
         author.setLastName(authorPostDto.getLastName());
         author.setFullName(authorPostDto.getName() + " " + authorPostDto.getLastName());
         return mapStructMapper.authorToAuthorGetDto(authorRepository.save(author));
+    }
+
+    public List<AuthorSlimDto> findAuthors() {
+        List<Author> authors = authorRepository.findAll();
+        return authors.stream().map(author -> mapStructMapper.authorToAuthorSlimDto(author)).collect(Collectors.toList());
     }
 }
