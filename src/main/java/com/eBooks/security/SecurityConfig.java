@@ -43,6 +43,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .cors().disable();
 
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll();
+
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean(), jwtUtil);
         customAuthenticationFilter.setFilterProcessesUrl("/api/login");
 
