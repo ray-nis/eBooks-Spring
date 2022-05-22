@@ -66,6 +66,8 @@ public class DataInitializer implements CommandLineRunner {
         Author author1 = authorService.create("author", "one");
         Author author2 = authorService.create("author", "two");
         Long[] authors = {author1.getId(), author2.getId()};
+        Long[] genres1 = {genre1.getId()};
+        Long[] genres2 = {genre2.getId()};
 
         BookPostDto book1PostDto = new BookPostDto();
         book1PostDto.setTitle("TheBook");
@@ -85,6 +87,30 @@ public class DataInitializer implements CommandLineRunner {
             bookPostDto.setPublishedDate(Date.from(Instant.now()));
             bookPostDto.setAuthorsId(new HashSet<Long>(Arrays.asList(authors)));
             bookPostDto.setGenresId(new HashSet<>(Arrays.asList(genres)));
+
+            bookService.create(bookPostDto);
+        }
+
+        for (int i = 0; i < 5; i++) {
+            BookPostDto bookPostDto = new BookPostDto();
+            bookPostDto.setTitle("TheBookGenred " + i);
+            bookPostDto.setDescription("TheDesc " + i);
+            bookPostDto.setTotalPages(100);
+            bookPostDto.setPublishedDate(Date.from(Instant.now()));
+            bookPostDto.setAuthorsId(new HashSet<Long>(Arrays.asList(authors)));
+            bookPostDto.setGenresId(new HashSet<>(Arrays.asList(genres1)));
+
+            bookService.create(bookPostDto);
+        }
+
+        for (int i = 0; i < 5; i++) {
+            BookPostDto bookPostDto = new BookPostDto();
+            bookPostDto.setTitle("TheBookGenredd " + i);
+            bookPostDto.setDescription("TheDesc " + i);
+            bookPostDto.setTotalPages(100);
+            bookPostDto.setPublishedDate(Date.from(Instant.now()));
+            bookPostDto.setAuthorsId(new HashSet<Long>(Arrays.asList(authors)));
+            bookPostDto.setGenresId(new HashSet<>(Arrays.asList(genres2)));
 
             bookService.create(bookPostDto);
         }

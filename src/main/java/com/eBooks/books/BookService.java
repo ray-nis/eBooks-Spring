@@ -14,7 +14,6 @@ import com.eBooks.mapstruct.mappers.MapStructMapper;
 import com.eBooks.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -120,9 +119,19 @@ public class BookService {
         return books.stream().map(book -> mapStructMapper.bookToBookGetDto(book)).collect(Collectors.toList());
     }
 
+    @Transactional
     public List<BookSlimDto> findBooks(Optional<Integer> page, Optional<String> sort) {
-        Pageable pageable = PaginationUtil.getAllAuthorsPageable(page, sort);
+        Pageable pageable = PaginationUtil.getAllBooksPageable(page, sort);
         Page<Book> books = bookRepository.findAll(pageable);
+        return books.stream().map(book -> mapStructMapper.bookToBookSlimDto(book)).collect(Collectors.toList());
+    }
+
+    public List<BookSlimDto> findByGenre(Long genreId, Optional<Integer> page, Optional<String> sort) throws GenreNotFoundException {
+        Pageable pageable = PaginationUtil.getAllBooksPageable(page, sort);
+        Genre genre = genreService.findById(genreId);
+        HashSet<Genre> genres = new HashSet<>();
+        genres.add(genre);
+        List<Book> books = bookRepository.findAllByGenresIn(genres, pageable);
         return books.stream().map(book -> mapStructMapper.bookToBookSlimDto(book)).collect(Collectors.toList());
     }
 }

@@ -73,7 +73,7 @@ public class AuthorService {
     }
 
     public List<AuthorSlimDto> findAuthors(Optional<Integer> page, Optional<String> sort) {
-        Pageable pageable = PaginationUtil.getAllBooksPageable(page, sort);
+        Pageable pageable = PaginationUtil.getAllAuthorsPageable(page, sort);
         Page<Author> authors = authorRepository.findAll(pageable);
         return authors.stream().map(author -> mapStructMapper.authorToAuthorSlimDto(author)).collect(Collectors.toList());
     }

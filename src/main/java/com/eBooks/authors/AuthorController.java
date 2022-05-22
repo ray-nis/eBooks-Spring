@@ -1,10 +1,7 @@
 package com.eBooks.authors;
 
 import com.eBooks.authors.dto.AuthorPostDto;
-import com.eBooks.books.dto.BookPostDto;
 import com.eBooks.exceptions.AuthorNotFoundException;
-import com.eBooks.exceptions.BookNotFoundException;
-import com.eBooks.exceptions.GenreNotFoundException;
 import com.eBooks.shared.response.ResponseFactory;
 import com.eBooks.util.MessageSourceUtil;
 import lombok.RequiredArgsConstructor;

@@ -41,6 +41,13 @@ public class BookController {
                 bookService.findByTitle(title));
     }
 
+    @RequestMapping(value = "/books", params = "genreId", method = RequestMethod.GET)
+    public ResponseEntity getBooksByGenreId(@RequestParam("genreId") Long genreId, @RequestParam("page") Optional<Integer> page, @RequestParam("sort") Optional<String> sort) throws GenreNotFoundException {
+        return ResponseFactory.ok(
+                messageSourceUtil.success(),
+                bookService.findByGenre(genreId, page, sort));
+    }
+
     @GetMapping("/books/{id}")
     public ResponseEntity getBookById(@PathVariable("id") Long id) throws BookNotFoundException {
         return ResponseFactory.ok(
